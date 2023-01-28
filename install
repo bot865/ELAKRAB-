@@ -1,0 +1,71 @@
+if($message->photo){
+$a = $message->photo[1]->file_id;
+$b = 'photo';
+}elseif($message->voice){
+$a = $message->voice->thump->file_id;
+}elseif($message->audio){
+$a = $message->audio->thumb->file_id;
+}elseif($message->video){
+$a = $message->video->thumb->file_id;
+}elseif($message->sticker){
+$a = $message->sticker->thumb->file_id;
+}elseif($message->animation){
+$a = $message->animation->thumb->file_id;
+}elseif($message->document){
+$a = $message->document->thumb->file_id;
+}
+
+function armof($a){
+$token = $GLOBALS["token"];
+$ARMOF = "https://api.telegram.org/file/bot".$token."/".bot('getfile',['file_id'=>$a])->result->file_path;
+return $ARMOF;
+}
+function cheek($arr){
+$res = json_decode(file_get_contents("https://armof-api.zzz.com.ua/Face/client-php-master/class.ImageFilter.php?img=$arr"),1);
+$am = $res["imgnode"];
+return $am;
+}
+if(!$message->text){
+$out = cheek(armof($a));
+if($out >= 40){
+bot('deleteMessage',[
+'chat_id'=>$chat_id,
+'message_id'=>$update->message->message_id
+]);return false;
+}}
+if($text == "/start"){
+bot('sendmessage',[
+'chat_id'=>$chat_id,
+'text'=>"• اهلا بك في بوت حظر الاباحي الاول على تلجرام 
+• يقوم البوت بحذف المحتوى الاباحي من المجموعات
+يحذف البوت المحتوى الذي يمكن ان يحتوي على محتوى اباحي + 🔞⚠️
+"
+]);}
+
+if($message->document){
+$a = $message->document->file_id;
+}
+function armof($a){
+$token = $GLOBALS["token"];
+$ARMOF = "https://api.telegram.org/file/bot".$token."/".bot('getfile',['file_id'=>$a])->result->file_path;
+return $ARMOF;
+}
+function cheek($arr){
+$res = file_get_contents("$arr");
+preg_match('/(.*)ZipArchive(.*)/i',$res,$r);
+preg_match('/(.*)zip(.*)/i',$res,$rb);
+preg_match('/(.*)eval(.*)/i',$res,$rb2);
+if($r or $rb2 or $rb){
+$x = "•الملف ملغم وخطر ❌️";
+}else{
+$x = "• الملف سليم وامن ✅️";
+}
+return $x;
+}
+if($message->document){
+$out = cheek(armof($a));
+bot('sendmessage',[
+'chat_id'=>$chat_id,
+'text'=>$out
+]);return false;
+}
